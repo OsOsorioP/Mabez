@@ -1,22 +1,22 @@
-import 'dotenv/config';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
+import cors from "cors";
+import dotenv from "dotenv"
+import express from "express";
 
-const app = express();
-const PORT = process.env.PORT ?? "5000";
+class Server {
+  public app: express.Application;
 
-app.use(express.json());
-app.use(cors());
-app.use(helmet());
+  constructor() {
+    dotenv.config({ path: ".env" });
+    this.app = express();
+    this.initConfig();
+  }
 
-// Ruta de prueba
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
+  public initConfig() {
+    this.app.set("PORT", process.env.PORT);
+    this.app.use(cors());
+    this.app.use(express.json({ limit: "50MB" }));
+    this.app.use(express.urlencoded({ extended: true }));
+  }
+}
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Access it at http://localhost:${PORT}`);
-});
+export default Server;
